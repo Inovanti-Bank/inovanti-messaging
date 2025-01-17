@@ -16,7 +16,6 @@ class SendGridProviderTest extends TestCase
         $responseMock->shouldReceive('statusCode')->andReturn(202);
         $responseMock->shouldReceive('headers')->andReturn(['X-Message-Id' => ['email-123']]);
 
-        // Criando o mock da classe SendGrid e definindo que ele deve retornar nossa resposta mockada
         $sendGridMock = Mockery::mock(SendGrid::class);
         $sendGridMock->shouldReceive('send')
             ->once()

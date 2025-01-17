@@ -34,7 +34,8 @@
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
-    "format": "vendor/bin/pint"
+    "unit": "vendor/bin/phpunit --testsuite=Unit",
+    "pint": "vendor/bin/pint"
   },
   "config": {
     "sort-packages": true,
