@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use InovantiBank\Messaging\Services\MessageService;
 use InovantiBank\Messaging\Services\TwilioSmsService;
 use InovantiBank\Messaging\Services\TwilioWhatsAppService;
-use InovantiBank\Messaging\Services\TwilioEmailService;
+use InovantiBank\Messaging\Services\SendGridEmailService;
 use InovantiBank\Messaging\Providers\TwilioProvider;
 use InovantiBank\Messaging\Providers\SendGridProvider;
 use Illuminate\Events\Dispatcher;
@@ -22,7 +22,7 @@ class MessagingServiceProvider extends ServiceProvider
             return new MessageService([
                 'sms' => $app->make(TwilioSmsService::class),
                 'whatsapp' => $app->make(TwilioWhatsAppService::class),
-                'email' => $app->make(TwilioEmailService::class),
+                'email' => $app->make(SendGridEmailService::class),
             ], $app->make(Dispatcher::class));
         });
 
@@ -40,8 +40,8 @@ class MessagingServiceProvider extends ServiceProvider
             ));
         });
 
-        $this->app->singleton(TwilioEmailService::class, function ($app) {
-            return new TwilioEmailService(new SendGridProvider(
+        $this->app->singleton(SendGridEmailService::class, function ($app) {
+            return new SendGridEmailService(new SendGridProvider(
                 config('messaging.sendgrid.api_key')
             ));
         });

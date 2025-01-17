@@ -8,7 +8,7 @@ use InovantiBank\Messaging\Events\MessageFailed;
 use InovantiBank\Messaging\Events\MessageSent;
 use InovantiBank\Messaging\Exceptions\MessagingException;
 use InovantiBank\Messaging\Services\MessageService;
-use InovantiBank\Messaging\Services\TwilioEmailService;
+use InovantiBank\Messaging\Services\SendGridEmailService;
 use InovantiBank\Messaging\Services\TwilioSmsService;
 use InovantiBank\Messaging\Services\TwilioWhatsAppService;
 use Mockery;
@@ -79,8 +79,8 @@ class MessageServiceTest extends TestCase
 
     public function test_it_sends_email_via_sendgrid()
     {
-        // Mock do TwilioEmailService
-        $twilioEmailMock = Mockery::mock(TwilioEmailService::class);
+        // Mock do SendGridEmailService
+        $twilioEmailMock = Mockery::mock(SendGridEmailService::class);
         $twilioEmailMock->shouldReceive('send')
             ->once()
             ->andReturn(['status' => 'success', 'message_id' => 'email-123']);
