@@ -1,37 +1,43 @@
-# Componente Messaging para aplicação em Laravel
+# Componente Messaging para Aplicações Laravel
 
 [![Latest Stable Version](https://poser.pugx.org/inovanti-bank/inovanti-messaging/v)](//packagist.org/packages/inovanti-bank/messaging)
 [![Total Downloads](https://poser.pugx.org/inovanti-bank/inovanti-messaging/downloads)](//packagist.org/packages/inovanti-bank/messaging)
 [![License](https://poser.pugx.org/inovanti-bank/inovanti-messaging/license)](//packagist.org/packages/inovanti-bank/messaging)
 
-Pacote desenvolvido para facilitar a troca de mensagens e integração com serviços externos de envio (SMS, e-mail, notificações, etc.) em projetos Laravel 11. O objetivo é fornecer uma API simples para gerenciar provedores de envio, rastreamento de mensagens e logs, sem complicar o fluxo de desenvolvimento.
+O `inovanti-messaging` é um pacote desenvolvido para facilitar a troca de mensagens e a integração com serviços externos de envio (SMS, e-mail, notificações, etc.) em projetos Laravel 11. O objetivo é fornecer uma API simples para gerenciar provedores de envio, rastreamento de mensagens e logs, sem complicar o fluxo de desenvolvimento.
 
-## Índice
+---
+
+## 📌 Índice
 
 1. [Instalação](#instalação)
 2. [Configuração](#configuração)
-3. APIs Suportadas
+3. [APIs Suportadas](#apis-suportadas)
 4. [Uso](#uso)
-   - [Exemplo Básico](#exemplo-básico)
+   - [Exemplo de Envio de SMS](#exemplo-de-envio-de-sms)
+   - [Exemplo de Envio de WhatsApp](#exemplo-de-envio-de-whatsapp)
+   - [Exemplo de Envio de E-mail](#exemplo-de-envio-de-e-mail)
 5. [Testes](#testes)
 6. [Contribuindo](#contribuindo)
 7. [Licença](#licença)
 
 ---
 
-## Instalação
+## 🚀 Instalação
 
 Para instalar este pacote via [Composer](https://getcomposer.org/), utilize o seguinte comando:
 
 ```bash
 composer require inovanti-bank/messaging
+
 ```
 
-## Configuração
+## ⚙️ Configuração
 
 ### Service Provider
 
-Se você estiver usando o Laravel 11, o próprio framework já pode descobrir o provider e o facade automaticamente. Porém, caso queira registrar manualmente, adicione no array de providers do arquivo `config/app.php`:
+Se você estiver usando o Laravel 11, o próprio framework já pode descobrir automaticamente o provider e a facade.
+Porém, caso queira registrar manualmente, adicione no array de `providers` do arquivo `config/app.php`:
 
 ```php
 'providers' => [
@@ -40,7 +46,7 @@ Se você estiver usando o Laravel 11, o próprio framework já pode descobrir o 
 ],
 ```
 
-## Publicar Configurações (opcional)
+### Publicar Configurações (opcional)
 
 Este pacote pode conter um arquivo de configuração que você pode publicar para customizar:
 
@@ -64,29 +70,110 @@ SENDGRID_API_KEY=your_sendgrid_api_key
 SENDGRID_FROM_EMAIL=no-reply@seu-dominio.com
 ```
 
-## APIs Suportadas
+## 🌐 APIs Suportadas
 
 Atualmente, a versão `1.0.0` do `inovanti-messaging` suporta as seguintes plataformas de envio de mensagens:
 
-- **Twilio** (SMS, WhatsApp)
-- **SendGrid** (E-mail)
+| API         | Tipo de Mensagem | Serviços Disponíveis |
+|------------|----------------|----------------------|
+| **Twilio**  | SMS            | `TwilioSmsService`  |
+| **Twilio**  | WhatsApp       | `TwilioWhatsAppService`  |
+| **SendGrid** | E-mail         | `TwilioEmailService` |
 
 Estamos constantemente adicionando novos provedores de envio ao pacote. Para obter a lista mais atualizada das APIs suportadas e instruções sobre como configurá-las, consulte o [repositório no GitHub](https://github.com/Inovanti-Bank/inovanti-messaging).
 
 Se houver suporte a novos provedores, a documentação será atualizada para incluir instruções específicas sobre como utilizá-los.
 
-## Uso
+## 📩 Uso
 
-### Exemplo Básico
+Agora o envio de mensagens é feito através de serviços específicos (`TwilioSmsService`, `TwilioWhatsAppService`, `TwilioEmailService`), que são gerenciados pelo MessageService.
 
-Após instalar e configurar, você pode começar a enviar mensagens usando a facade `Messaging` (ou a injeção de dependência via construtor, se preferir):
+### Exemplo de Envio de SMS
 
 ```php
 use InovantiBank\Messaging\Services\MessageService;
+use InovantiBank\Messaging\Services\TwilioSmsService;
+use InovantiBank\Messaging\Providers\TwilioProvider;
 use InovantiBank\Messaging\DTOs\MessageData;
+use Illuminate\Events\Dispatcher;
 
-$config = config('messaging');
-$messageService = new MessageService($config);
+// Criando instância do provedor
+$twilioProvider = new TwilioProvider(
+    config('messaging.twilio.account_sid'),
+    config('messaging.twilio.auth_token')
+);
+
+$smsService = new TwilioSmsService($twilioProvider);
+
+// Criando o MessageService com suporte a SMS
+$messageService = new MessageService([
+    'sms' => $smsService,
+], new Dispatcher());
+
+// Criando os dados da mensagem
+$messageData = new MessageData(
+    type: 'sms',
+    to: '+5511987654321',
+    from: config('messaging.twilio.sms_from'),
+    content: 'Mensagem SMS de teste via Twilio.'
+);
+
+// Enviando mensagem
+$response = $messageService->send($messageData);
+
+print_r($response);
+```
+
+### Exemplo de Envio de WhatsApp
+```php
+use InovantiBank\Messaging\Services\MessageService;
+use InovantiBank\Messaging\Services\TwilioWhatsAppService;
+use InovantiBank\Messaging\Providers\TwilioProvider;
+use InovantiBank\Messaging\DTOs\MessageData;
+use Illuminate\Events\Dispatcher;
+
+// Criando instância do provedor
+$twilioProvider = new TwilioProvider(
+    config('messaging.twilio.account_sid'),
+    config('messaging.twilio.auth_token')
+);
+
+$whatsappService = new TwilioWhatsAppService($twilioProvider);
+
+// Criando o MessageService com suporte a WhatsApp
+$messageService = new MessageService([
+    'whatsapp' => $whatsappService,
+], new Dispatcher());
+
+$messageData = new MessageData(
+    type: 'whatsapp',
+    to: '+5511987654321',
+    from: config('messaging.twilio.whatsapp_from'),
+    content: 'Mensagem de teste via WhatsApp Twilio.'
+);
+
+$response = $messageService->send($messageData);
+
+print_r($response);
+```
+
+### Exemplo de Envio de E-mail
+```php
+use InovantiBank\Messaging\Services\MessageService;
+use InovantiBank\Messaging\Services\TwilioEmailService;
+use InovantiBank\Messaging\Providers\SendGridProvider;
+use InovantiBank\Messaging\DTOs\MessageData;
+use Illuminate\Events\Dispatcher;
+
+// Criando instância do provedor
+$sendGridProvider = new SendGridProvider(config('messaging.sendgrid.api_key'));
+
+$emailService = new TwilioEmailService($sendGridProvider);
+
+// Criando o MessageService com suporte a E-mail
+$messageService = new MessageService([
+    'email' => $emailService,
+], new Dispatcher());
 
 $messageData = new MessageData(
     type: 'email',
@@ -101,35 +188,23 @@ $response = $messageService->send($messageData);
 print_r($response);
 ```
 
-### Neste exemplo:
+## 🧪 Testes
 
-- Montamos um objeto `MessageData` com os campos necessários para o envio da mensagem.
-- Chamamos o método `send` do serviço de mensagens.
-- Tratamos o objeto de retorno que informa se o envio foi bem-sucedido.
-
-> Dica: As configurações de provedor de envio, tokens de autenticação e endpoints podem ser gerenciadas no arquivo de configuração publicado, caso seu serviço exija.
-
-## Testes
-
-O pacote vem com testes unitários e de integração simulada para garantir que tudo funcione conforme o esperado. Você pode executar os testes usando PHPUnit:
+O pacote vem com testes unitários simulada para garantir que tudo funcione conforme o esperado. Você pode executar os testes usando PHPUnit:
 
 ```bash
 vendor/bin/phpunit
+composer test
 ```
 
 ### Para testes unit:
 
 ```bash
 vendor/bin/phpunit --testsuite=Unit
+composer unit
 ```
 
-### Para testes de integração:
-
-```bash
-vendor/bin/phpunit --testsuite=Integration
-```
-
-## Contribuindo
+## 🤝 Contribuindo
 
 Contribuições são bem-vindas! Se você deseja reportar um bug, solicitar um novo recurso ou contribuir com código, fique à vontade para abrir uma issue ou enviar um Pull Request.
 
@@ -139,6 +214,6 @@ Contribuições são bem-vindas! Se você deseja reportar um bug, solicitar um n
 4. Faça o push para a branch: `git push origin minha-nova-feature`
 5. Crie um novo Pull Request
 
-## Licença
+## 📜 Licença
 
 Este projeto está licenciado sob a [MIT license](https://github.com/Inovanti-Bank/inovanti-messaging/tree/production?tab=MIT-1-ov-file).

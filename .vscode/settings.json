@@ -6,6 +6,7 @@
     "phpunit",
     "sendgrid",
     "SENDGRID",
+    "testsuite",
     "twilio",
     "whatsapp"
   ]
