@@ -6,6 +6,27 @@
 
 O `inovanti-messaging` é um pacote desenvolvido para facilitar a troca de mensagens e a integração com serviços externos de envio (SMS, e-mail, notificações, etc.) em projetos Laravel 11. O objetivo é fornecer uma API simples para gerenciar provedores de envio, rastreamento de mensagens e logs, sem complicar o fluxo de desenvolvimento.
 
+```mermaid
+graph TD;
+    A["📱 **Aplicação Laravel**"] -->|"📤 Cria MessageData"| B["🔧 **MessageService**"]
+    
+    B -->|"📩 Tipo: SMS"| C["📨 **TwilioSmsService**"]
+    B -->|"💬 Tipo: WhatsApp"| D["🟢 **TwilioWhatsAppService**"]
+    B -->|"📧 Tipo: Email"| E[✉️ **TwilioEmailService**]
+
+    C -->|"🔄 Envia para"| F["📡 **Twilio API (SMS)**"]
+    D -->|"🔄 Envia para"| G["📡 **Twilio API (WhatsApp)**"]
+    E -->|"🔄 Envia para"| H["📡 **SendGrid API**"]
+
+    F -->|"✅ Resposta"| I["📊 **Retorna Status**"]
+    G -->|"✅ Resposta"| I["📊 **Retorna Status**"]
+    H -->|"✅ Resposta"| I["📊 **Retorna Status**"]
+    
+    I -->|"🚀 Dispara Evento"| J["📢 **MessageSent ou MessageFailed**"]
+    
+    J -->|"📜 Notifica Aplicação"| K["📝 **Callback/Log**"]
+```
+
 ---
 
 ## 📌 Índice
