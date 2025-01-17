@@ -1,8 +1,8 @@
 # Componente Messaging para aplicação em Laravel
 
-[![Latest Stable Version](https://poser.pugx.org/inovanti-bank/inovanti-messaging/v)](//packagist.org/packages/inovanti-bank/inovanti-messaging)
-[![Total Downloads](https://poser.pugx.org/inovanti-bank/inovanti-messaging/downloads)](//packagist.org/packages/inovanti-bank/inovanti-messaging)
-[![License](https://poser.pugx.org/inovanti-bank/inovanti-messaging/license)](//packagist.org/packages/inovanti-bank/inovanti-messaging)
+[![Latest Stable Version](https://poser.pugx.org/inovanti-bank/inovanti-messaging/v)](//packagist.org/packages/inovanti-bank/messaging)
+[![Total Downloads](https://poser.pugx.org/inovanti-bank/inovanti-messaging/downloads)](//packagist.org/packages/inovanti-bank/messaging)
+[![License](https://poser.pugx.org/inovanti-bank/inovanti-messaging/license)](//packagist.org/packages/inovanti-bank/messaging)
 
 Pacote desenvolvido para facilitar a troca de mensagens e integração com serviços externos de envio (SMS, e-mail, notificações, etc.) em projetos Laravel 11. O objetivo é fornecer uma API simples para gerenciar provedores de envio, rastreamento de mensagens e logs, sem complicar o fluxo de desenvolvimento.
 
@@ -28,7 +28,9 @@ composer require inovanti-bank/messaging
 ```
 
 ## Configuração
+
 ### Service Provider
+
 Se você estiver usando o Laravel 11, o próprio framework já pode descobrir o provider e o facade automaticamente. Porém, caso queira registrar manualmente, adicione no array de providers do arquivo `config/app.php`:
 
 ```php
@@ -39,16 +41,19 @@ Se você estiver usando o Laravel 11, o próprio framework já pode descobrir o 
 ```
 
 ## Publicar Configurações (opcional)
+
 Este pacote pode conter um arquivo de configuração que você pode publicar para customizar:
 
 ```bash
 php artisan vendor:publish --provider="InovantiBank\Messaging\Providers\MessagingServiceProvider" --tag="config"
 ```
+
 Após isso, edite o arquivo `config/messaging.php` conforme necessário.
 
 Adicione as seguintes variáveis no `.env`:
- ```bash
- # Twilio
+
+```bash
+# Twilio
 TWILIO_ACCOUNT_SID=your_account_sid
 TWILIO_AUTH_TOKEN=your_auth_token
 TWILIO_SMS_FROM=+1234567890
@@ -64,14 +69,16 @@ SENDGRID_FROM_EMAIL=no-reply@seu-dominio.com
 Atualmente, a versão `1.0.0` do `inovanti-messaging` suporta as seguintes plataformas de envio de mensagens:
 
 - **Twilio** (SMS, WhatsApp)
-- **SendGrid**  (E-mail)
+- **SendGrid** (E-mail)
 
 Estamos constantemente adicionando novos provedores de envio ao pacote. Para obter a lista mais atualizada das APIs suportadas e instruções sobre como configurá-las, consulte o [repositório no GitHub](https://github.com/Inovanti-Bank/inovanti-messaging).
 
 Se houver suporte a novos provedores, a documentação será atualizada para incluir instruções específicas sobre como utilizá-los.
 
 ## Uso
+
 ### Exemplo Básico
+
 Após instalar e configurar, você pode começar a enviar mensagens usando a facade `Messaging` (ou a injeção de dependência via construtor, se preferir):
 
 ```php
@@ -105,6 +112,7 @@ print_r($response);
 ## Testes
 
 O pacote vem com testes unitários e de integração simulada para garantir que tudo funcione conforme o esperado. Você pode executar os testes usando PHPUnit:
+
 ```bash
 vendor/bin/phpunit
 ```
@@ -122,6 +130,7 @@ vendor/bin/phpunit --testsuite=Integration
 ```
 
 ## Contribuindo
+
 Contribuições são bem-vindas! Se você deseja reportar um bug, solicitar um novo recurso ou contribuir com código, fique à vontade para abrir uma issue ou enviar um Pull Request.
 
 1. Faça um Fork do projeto
@@ -131,4 +140,5 @@ Contribuições são bem-vindas! Se você deseja reportar um bug, solicitar um n
 5. Crie um novo Pull Request
 
 ## Licença
+
 Este projeto está licenciado sob a [MIT license](https://github.com/Inovanti-Bank/inovanti-messaging/tree/production?tab=MIT-1-ov-file).
