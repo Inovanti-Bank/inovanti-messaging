@@ -9,10 +9,10 @@ O `inovanti-messaging` é um pacote desenvolvido para facilitar a troca de mensa
 ```mermaid
 graph TD;
     A["📱 **Aplicação Laravel**"] -->|"📤 Cria MessageData"| B["🔧 **MessageService**"]
-    
+
     B -->|"📩 Tipo: SMS"| C["📨 **TwilioSmsService**"]
     B -->|"💬 Tipo: WhatsApp"| D["🟢 **TwilioWhatsAppService**"]
-    B -->|"📧 Tipo: Email"| E[✉️ **TwilioEmailService**]
+    B -->|"📧 Tipo: Email"| E[✉️ **SendGridEmailService**]
 
     C -->|"🔄 Envia para"| F["📡 **Twilio API (SMS)**"]
     D -->|"🔄 Envia para"| G["📡 **Twilio API (WhatsApp)**"]
@@ -21,9 +21,9 @@ graph TD;
     F -->|"✅ Resposta"| I["📊 **Retorna Status**"]
     G -->|"✅ Resposta"| I["📊 **Retorna Status**"]
     H -->|"✅ Resposta"| I["📊 **Retorna Status**"]
-    
+
     I -->|"🚀 Dispara Evento"| J["📢 **MessageSent ou MessageFailed**"]
-    
+
     J -->|"📜 Notifica Aplicação"| K["📝 **Callback/Log**"]
 ```
 
@@ -95,11 +95,11 @@ SENDGRID_FROM_EMAIL=no-reply@seu-dominio.com
 
 Atualmente, a versão `1.0.0` do `inovanti-messaging` suporta as seguintes plataformas de envio de mensagens:
 
-| API         | Tipo de Mensagem | Serviços Disponíveis |
-|------------|----------------|----------------------|
-| **Twilio**  | SMS            | `TwilioSmsService`  |
-| **Twilio**  | WhatsApp       | `TwilioWhatsAppService`  |
-| **SendGrid** | E-mail         | `TwilioEmailService` |
+| API          | Tipo de Mensagem | Serviços Disponíveis    |
+| ------------ | ---------------- | ----------------------- |
+| **Twilio**   | SMS              | `TwilioSmsService`      |
+| **Twilio**   | WhatsApp         | `TwilioWhatsAppService` |
+| **SendGrid** | E-mail           | `SendGridEmailService`  |
 
 Estamos constantemente adicionando novos provedores de envio ao pacote. Para obter a lista mais atualizada das APIs suportadas e instruções sobre como configurá-las, consulte o [repositório no GitHub](https://github.com/Inovanti-Bank/inovanti-messaging).
 
@@ -107,7 +107,7 @@ Se houver suporte a novos provedores, a documentação será atualizada para inc
 
 ## 📩 Uso
 
-Agora o envio de mensagens é feito através de serviços específicos (`TwilioSmsService`, `TwilioWhatsAppService`, `TwilioEmailService`), que são gerenciados pelo MessageService.
+Agora o envio de mensagens é feito através de serviços específicos (`TwilioSmsService`, `TwilioWhatsAppService`, `SendGridEmailService`), que são gerenciados pelo MessageService.
 
 ### Exemplo de Envio de SMS
 
@@ -118,24 +118,21 @@ use InovantiBank\Messaging\Providers\TwilioProvider;
 use InovantiBank\Messaging\DTOs\MessageData;
 use Illuminate\Events\Dispatcher;
 
-// Criando instância do provedor
 $twilioProvider = new TwilioProvider(
-    config('messaging.twilio.account_sid'),
-    config('messaging.twilio.auth_token')
+    env('TWILIO_ACCOUNT_SID'),
+    env('TWILIO_AUTH_TOKEN')
 );
 
 $smsService = new TwilioSmsService($twilioProvider);
 
-// Criando o MessageService com suporte a SMS
 $messageService = new MessageService([
     'sms' => $smsService,
 ], new Dispatcher());
 
-// Criando os dados da mensagem
 $messageData = new MessageData(
     type: 'sms',
     to: '+5511987654321',
-    from: config('messaging.twilio.sms_from'),
+    from: env('TWILIO_SMS_FROM'),
     content: 'Mensagem SMS de teste via Twilio.'
 );
 
@@ -146,6 +143,7 @@ print_r($response);
 ```
 
 ### Exemplo de Envio de WhatsApp
+
 ```php
 use InovantiBank\Messaging\Services\MessageService;
 use InovantiBank\Messaging\Services\TwilioWhatsAppService;
@@ -153,15 +151,13 @@ use InovantiBank\Messaging\Providers\TwilioProvider;
 use InovantiBank\Messaging\DTOs\MessageData;
 use Illuminate\Events\Dispatcher;
 
-// Criando instância do provedor
 $twilioProvider = new TwilioProvider(
-    config('messaging.twilio.account_sid'),
-    config('messaging.twilio.auth_token')
+    env('TWILIO_ACCOUNT_SID'),
+    env('TWILIO_AUTH_TOKEN')
 );
 
 $whatsappService = new TwilioWhatsAppService($twilioProvider);
 
-// Criando o MessageService com suporte a WhatsApp
 $messageService = new MessageService([
     'whatsapp' => $whatsappService,
 ], new Dispatcher());
@@ -169,7 +165,7 @@ $messageService = new MessageService([
 $messageData = new MessageData(
     type: 'whatsapp',
     to: '+5511987654321',
-    from: config('messaging.twilio.whatsapp_from'),
+    from: env('TWILIO_WHATSAPP_FROM'),
     content: 'Mensagem de teste via WhatsApp Twilio.'
 );
 
@@ -179,19 +175,18 @@ print_r($response);
 ```
 
 ### Exemplo de Envio de E-mail
+
 ```php
 use InovantiBank\Messaging\Services\MessageService;
-use InovantiBank\Messaging\Services\TwilioEmailService;
+use InovantiBank\Messaging\Services\SendGridEmailService;
 use InovantiBank\Messaging\Providers\SendGridProvider;
 use InovantiBank\Messaging\DTOs\MessageData;
 use Illuminate\Events\Dispatcher;
 
-// Criando instância do provedor
-$sendGridProvider = new SendGridProvider(config('messaging.sendgrid.api_key'));
+$sendGridProvider = new SendGridProvider(env('SENDGRID_API_KEY'));
 
-$emailService = new TwilioEmailService($sendGridProvider);
+$emailService = new SendGridEmailService($sendGridProvider);
 
-// Criando o MessageService com suporte a E-mail
 $messageService = new MessageService([
     'email' => $emailService,
 ], new Dispatcher());
@@ -199,7 +194,7 @@ $messageService = new MessageService([
 $messageData = new MessageData(
     type: 'email',
     to: 'destinatario@example.com',
-    from: config('messaging.sendgrid.from_email'),
+    from: env('SENDGRID_FROM_EMAIL'),
     content: 'Este é um e-mail de teste enviado via SendGrid.',
     metadata: ['subject' => 'Teste de E-mail via SendGrid']
 );
