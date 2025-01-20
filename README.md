@@ -1,8 +1,9 @@
 # Componente Messaging para Aplicações Laravel
 
-[![Latest Stable Version](https://poser.pugx.org/inovanti-bank/inovanti-messaging/v)](//packagist.org/packages/inovanti-bank/messaging)
-[![Total Downloads](https://poser.pugx.org/inovanti-bank/inovanti-messaging/downloads)](//packagist.org/packages/inovanti-bank/messaging)
-[![License](https://poser.pugx.org/inovanti-bank/inovanti-messaging/license)](//packagist.org/packages/inovanti-bank/messaging)
+[![Latest Stable Version](https://poser.pugx.org/inovanti-bank/messaging/v)](https://packagist.org/packages/inovanti-bank/messaging)
+[![Total Downloads](https://poser.pugx.org/inovanti-bank/messaging/downloads)](https://packagist.org/packages/inovanti-bank/messaging)
+[![License](https://poser.pugx.org/inovanti-bank/messaging/license)](https://packagist.org/packages/inovanti-bank/messaging)
+[![PHP Version Require](https://poser.pugx.org/inovanti-bank/messaging/require/php)](https://packagist.org/packages/inovanti-bank/messaging)
 
 O `inovanti-messaging` é um pacote desenvolvido para facilitar a troca de mensagens e a integração com serviços externos de envio (SMS, e-mail, notificações, etc.) em projetos Laravel 11. O objetivo é fornecer uma API simples para gerenciar provedores de envio, rastreamento de mensagens e logs, sem complicar o fluxo de desenvolvimento.
 
