@@ -2,14 +2,12 @@
 
 namespace InovantiBank\Messaging\Providers;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use InovantiBank\Messaging\Services\MessageService;
+use InovantiBank\Messaging\Services\SendGridEmailService;
 use InovantiBank\Messaging\Services\TwilioSmsService;
 use InovantiBank\Messaging\Services\TwilioWhatsAppService;
-use InovantiBank\Messaging\Services\SendGridEmailService;
-use InovantiBank\Messaging\Providers\TwilioProvider;
-use InovantiBank\Messaging\Providers\SendGridProvider;
-use Illuminate\Events\Dispatcher;
 
 class MessagingServiceProvider extends ServiceProvider
 {
@@ -53,7 +51,7 @@ class MessagingServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/../Config/messaging.php' => config_path('messaging.php'),
+            __DIR__.'/../../Messaging/Config/messaging.php' => config_path('messaging.php'),
         ], 'config');
     }
 }
