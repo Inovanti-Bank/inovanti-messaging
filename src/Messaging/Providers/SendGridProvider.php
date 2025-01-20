@@ -44,18 +44,34 @@ class SendGridProvider implements MessagingProviderInterface
 
             return [
                 'status' => $response->statusCode() === 202 ? 'success' : 'error',
-                'message_id' => $response->headers()['X-Message-Id'][0] ?? null,
+                'message_id' => $this->headersToArrayAssoc($response->headers())['X-Message-Id'] ?? null,
                 'to' => $messageData->to,
                 'from' => $messageData->from,
                 'type' => 'email',
                 'http_status' => $response->statusCode(),
             ];
         } catch (Exception $e) {
+            $errorResponse = method_exists($e, 'getResponse') ? $e->getResponse() : null;
+
             return [
                 'status' => 'error',
                 'error' => $e->getMessage(),
-                'response' => method_exists($e, 'getResponse') ? $e->getResponse() : null,
+                'response' => $errorResponse ? $errorResponse->getBody()->getContents() : null,
             ];
         }
+    }
+
+    private function headersToArrayAssoc(array $headers): array
+    {
+        $headersAssoc = [];
+
+        foreach ($headers as $header) {
+            if (strpos($header, ': ') !== false) {
+                [$key, $value] = explode(': ', $header, 2);
+                $headersAssoc[$key] = $value;
+            }
+        }
+
+        return $headersAssoc;
     }
 }
