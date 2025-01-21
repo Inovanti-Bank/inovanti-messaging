@@ -61,6 +61,31 @@ class SendGridProvider implements MessagingProviderInterface
         }
     }
 
+    /**
+     * Obtém os detalhes de uma mensagem a partir do seu ID no SendGrid.
+     */
+    public function getMessageById(string $msgId): ?array
+    {
+        try {
+            $response = $this->sendGrid->client
+                ->messages()
+                ->_($msgId)
+                ->get();
+
+            if ($response->statusCode() !== 200) {
+                throw new Exception("Erro ao buscar detalhes da mensagem. Status HTTP: {$response->statusCode()}");
+            }
+
+            return json_decode($response->body(), true);
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'error' => $e->getMessage(),
+                'http_status' => isset($response) ? $response->statusCode() : null,
+            ];
+        }
+    }
+
     private function headersToArrayAssoc(array $headers): array
     {
         $headersAssoc = [];
