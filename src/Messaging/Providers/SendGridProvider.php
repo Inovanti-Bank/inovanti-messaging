@@ -40,6 +40,18 @@ class SendGridProvider implements MessagingProviderInterface
             $email->addContent('text/plain', $messageData->content);
             $email->addContent('text/html', "<p>{$messageData->content}</p>");
 
+            if (isset($messageData->addCC)) {
+                foreach ($messageData->addCC as $cc) {
+                    $email->addCc($cc);
+                }
+            }
+
+            if (isset($messageData->addBCC)) {
+                foreach ($messageData->addBCC as $bcc) {
+                    $email->addBcc($bcc);
+                }
+            }
+
             $response = $this->sendGrid->send($email);
 
             return [
@@ -49,6 +61,8 @@ class SendGridProvider implements MessagingProviderInterface
                 'from' => $messageData->from,
                 'type' => 'email',
                 'http_status' => $response->statusCode(),
+                'cc' => $messageData->addCC ?? null,
+                'bcc' => $messageData->addBCC ?? null,
             ];
         } catch (Exception $e) {
             $errorResponse = method_exists($e, 'getResponse') ? $e->getResponse() : null;
