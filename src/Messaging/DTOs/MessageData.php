@@ -9,6 +9,8 @@ class MessageData
         public string $to,        // Destinatário (e-mail ou telefone)
         public string $from,      // Remetente (opcional, depende do provedor)
         public string $content,   // Conteúdo da mensagem
-        public ?array $metadata = [] // Metadados adicionais (headers, configs específicas)
+        public ?array $metadata = [], // Metadados adicionais (headers, configs específicas)
+        public ?array $addCC = [], // Destinatários em cópia visível (e-mail ou telefone)
+        public ?array $addBCC = [] // Destinatários em cópia oculta (e-mail ou telefone)
     ) {}
 }
