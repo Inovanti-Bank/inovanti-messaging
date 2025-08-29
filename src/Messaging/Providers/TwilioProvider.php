@@ -33,8 +33,8 @@ class TwilioProvider implements MessagingProviderInterface
     {
         try {
             $from = $messageData->type === 'whatsapp'
-                ? 'whatsapp:'.env('TWILIO_WHATSAPP_FROM')
-                : env('TWILIO_SMS_FROM');
+                ? 'whatsapp:'.config('messaging.twilio.whatsapp_from')
+                : config('messaging.twilio.sms_from');
 
             $message = $this->twilio->messages->create(
                 $messageData->type === 'whatsapp' ? 'whatsapp:'.$messageData->to : $messageData->to,
