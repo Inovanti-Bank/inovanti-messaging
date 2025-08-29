@@ -199,7 +199,7 @@ $messageData = new MessageData(
     content: 'Este é um e-mail de teste enviado via SendGrid.',
     metadata: ['subject' => 'Teste de E-mail via SendGrid'],
     addCC: ['destinatario2@example.com', 'destinatario3@example.com'],
-    addBCC: ['destinatario.oculto@example.com', 'destinatario.oculto1@example.com'],
+    addBCC: ['destinatario.oculto@example.com', 'destinatario.oculto1@example.com']
 );
 
 $response = $messageService->send($messageData);
