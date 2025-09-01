@@ -11,6 +11,7 @@ class MessageData
         public string $content,   // Conteúdo da mensagem
         public ?array $metadata = [], // Metadados adicionais (headers, configs específicas)
         public ?array $addCC = [], // Destinatários em cópia visível (e-mail ou telefone)
-        public ?array $addBCC = [] // Destinatários em cópia oculta (e-mail ou telefone)
+        public ?array $addBCC = [], // Destinatários em cópia oculta (e-mail ou telefone)
+        public ?array $addAttachments = [], // Anexos da mensagem
     ) {}
 }
