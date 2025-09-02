@@ -2,9 +2,7 @@
 
 namespace InovantiBank\Messaging\Providers;
 
-use App\Validators\AttachmentValidator;
 use Exception;
-use Illuminate\Support\Facades\Log;
 use InovantiBank\Messaging\Contracts\MessagingProviderInterface;
 use InovantiBank\Messaging\DTOs\MessageData;
 use SendGrid;
