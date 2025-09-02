@@ -55,8 +55,8 @@ class SendGridProvider implements MessagingProviderInterface
             if (isset($messageData->addAttachments) && ! empty($messageData->addAttachments)) {
                 foreach ($messageData->addAttachments as $attachment) {
                     $email->addAttachment(
-                        attachment: $attachment['base64_content'],
-                        filename: $attachment['file_name'],
+                        attachment: $attachment->base64_file,
+                        filename: $attachment->file_name,
                     );
                 }
             }
