@@ -2,7 +2,6 @@
 
 namespace InovantiBank\Messaging\Providers;
 
-use App\Validators\AttachmentValidator;
 use Exception;
 use InovantiBank\Messaging\Contracts\MessagingProviderInterface;
 use InovantiBank\Messaging\DTOs\MessageData;
@@ -55,7 +54,10 @@ class SendGridProvider implements MessagingProviderInterface
 
             if (isset($messageData->addAttachments) && ! empty($messageData->addAttachments)) {
                 foreach ($messageData->addAttachments as $attachment) {
-                    $email->addAttachment($attachment);
+                    $email->addAttachment(
+                        attachment: $attachment['base64_content'],
+                        filename: $attachment['file_name'],
+                    );
                 }
             }
 
