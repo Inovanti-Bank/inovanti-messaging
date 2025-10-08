@@ -57,6 +57,7 @@ class SendGridProvider implements MessagingProviderInterface
                     $email->addAttachment(
                         attachment: $attachment->base64_file,
                         filename: $attachment->file_name,
+                        type: $attachment->file_type->value
                     );
                 }
             }

@@ -2,11 +2,14 @@
 
 namespace InovantiBank\Messaging\DTOs;
 
+use InovantiBank\Messaging\Enums\FileTypesEnum;
+
 class AttachmentData
 {
     public function __construct(
         public string $base64_file,
-        public string $file_name
+        public string $file_name,
+        public FileTypesEnum $file_type = FileTypesEnum::PDF
     ) {
         if (empty($base64_file) || empty($file_name)) {
             throw new \InvalidArgumentException(
