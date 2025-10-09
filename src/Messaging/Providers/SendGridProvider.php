@@ -56,7 +56,7 @@ class SendGridProvider implements MessagingProviderInterface
                 foreach ($messageData->addAttachments as $attachment) {
                     $email->addAttachment(
                         attachment: $attachment->base64_file,
-                        filename: $attachment->file_name,
+                        filename: $this->sanitizeFileName($attachment->file_name),
                         type: $attachment->file_type->value
                     );
                 }
@@ -122,5 +122,16 @@ class SendGridProvider implements MessagingProviderInterface
         }
 
         return $headersAssoc;
+    }
+
+    private function sanitizeFileName(string $fileName)
+    {
+        $sanitizedFileName = $fileName;
+
+        $sanitizedFileName = preg_replace('/[^A-Za-z0-9_.]/', '_', $sanitizedFileName);
+        $sanitizedFileName = preg_replace('/_+/', '_', $sanitizedFileName);
+        $sanitizedFileName = trim($sanitizedFileName, '_');
+
+        return $sanitizedFileName;
     }
 }
