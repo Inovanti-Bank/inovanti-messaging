@@ -19,4 +19,9 @@ class SendGridEmailService implements MessagingChannelInterface
     {
         return $this->provider->sendMessage($messageData);
     }
+
+    public function getMessageById(string $messageId): ?array
+    {
+        return $this->provider->getMessageById($messageId);
+    }
 }
