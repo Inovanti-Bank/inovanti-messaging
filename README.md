@@ -197,7 +197,14 @@ $messageData = new MessageData(
     to: 'destinatario@example.com',
     from: env('SENDGRID_FROM_EMAIL'),
     content: 'Este é um e-mail de teste enviado via SendGrid.',
-    metadata: ['subject' => 'Teste de E-mail via SendGrid'],
+    subject: 'Teste de E-mail via SendGrid',
+    fromName: 'Inovanti',
+    replyTo: 'suporte@example.com',
+    replyToName: 'Suporte Inovanti',
+    categories: ['transactional', 'credit'],
+    customArgs: ['operation' => 'proposal_created'],
+    headers: ['X-Trace-Id' => 'trace-123'],
+    correlationId: 'proposal-123',
     addCC: ['destinatario2@example.com', 'destinatario3@example.com'],
     addBCC: ['destinatario.oculto@example.com', 'destinatario.oculto1@example.com']
 );
@@ -206,6 +213,32 @@ $response = $messageService->send($messageData);
 
 print_r($response);
 ```
+
+O campo `subject` é opcional. Para compatibilidade, o assunto informado em
+`metadata['subject']` continua sendo aceito. Quando `correlationId` é informado,
+ele também é enviado ao SendGrid como o custom arg `correlation_id`, facilitando
+a correlação do envio com os eventos e a atividade da mensagem.
+
+O retorno do envio preserva os campos existentes (`status`, `message_id`, `to`,
+`from`, `type`, `http_status`, `cc` e `bcc`) e inclui o contexto rastreável usado
+no payload, além de `response_headers` e `response_body` do SendGrid.
+`message_id` e `x_message_id` representam o `X-Message-ID` retornado no aceite do
+Mail Send. O `sg_message_id` definitivo é atribuído aos eventos individuais pelo
+SendGrid e pode ser obtido na atividade da mensagem ou no Event Webhook.
+
+Categorias devem representar agrupamentos gerais. Para identificadores por envio,
+prefira `customArgs` ou `correlationId`. Não envie dados pessoais sensíveis nesses
+campos, pois o SendGrid não os trata como PII e pode armazená-los por longo prazo.
+
+Para consultar a atividade de uma mensagem pelo ID retornado no envio:
+
+```php
+$message = $emailService->getMessageById($response['message_id']);
+```
+
+Essa consulta utiliza a Email Activity Feed API do SendGrid e exige que a conta
+tenha o histórico adicional contratado e que a API key possua permissão de acesso
+à atividade de e-mail.
 
 ## 🧪 Testes
 
