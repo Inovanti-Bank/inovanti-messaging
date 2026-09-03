@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kit": {
+    "name": "humu-backend-sdd-kit",
+    "version": "0.2.0-rc.4",
+    "source": {
+      "provider": "github",
+      "organization": "Inovanti-Bank",
+      "repository": "humu-backend-sdd-kit"
+    },
+    "release": {
+      "tag": "v0.2.0-rc.4",
+      "commit": "984f7c8ef3532c41087301f3f1a7525de2f416cf"
+    }
+  },
+  "profile": "package",
+  "template_set": "core",
+  "templates": {
+    "SPEC.md": {
+      "sha256": "e1f3983676bf6b70cc23aeb0f4d00292a8693c6e7e1373ed572c92d9d81e61ce"
+    },
+    "SPEC-REDUCED.md": {
+      "sha256": "6f84decac2d929d92eb9ea580dc36c9ed64925b4162a4e2db72aa0d080063a36"
+    },
+    "IMPLEMENTATION.md": {
+      "sha256": "182d49b5f6e96f535a1c6f3038ab9d623ece7c4c5c626356adf72afaa5a87bae"
+    },
+    "QA.md": {
+      "sha256": "814cf442e2eeee41c033b930fe7ebd133a52124616ae7858d910b2d90a0d5feb"
+    },
+    "HANDOFF.md": {
+      "sha256": "894186f8c5e41c4dc1612fd31a48c4a53fcd6fe8046791db16183a37d9e077ae"
+    },
+    "DECISIONS.md": {
+      "sha256": "acfb4b0c7da8b865186ae7092f7d1999da876a094ce09de272d972b9d9517117"
+    }
+  },
+  "readme": {
+    "format_version": 1,
+    "common_revision": "d352a5eb7c18a2a4fe12cb413923e084137f32871be64808c3e241b2f727ad34",
+    "profile_revision": "be2436e01c7a80db23b475070963d7885a0c5816fc03bc460881681e0ad8bab6"
+  }
+}
